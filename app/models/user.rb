@@ -11,6 +11,6 @@ class User < ApplicationRecord
   def birth_cannot_be_in_the_future
     return unless birth_date.present? && birth_date > Date.today
 
-    errors.add(:birth_date, '未来の日付には出来ません')
+    errors.add(:birth_date, 'cannot be a future date')
   end
 end
