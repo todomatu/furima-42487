@@ -3,5 +3,14 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  validates :nickname, :last_name, :first_name, :first_name_kana, :first_name_kana, :birth_date, presence: true
+  validates :nickname, :last_name, :first_name, :last_name_kana, :first_name_kana, :birth_date, presence: true
+  validate :birth_cannot_be_in_the_future
+
+  private
+
+  def birth_cannot_be_in_the_future
+    return unless birth_date.present? && birth_date > Date.today
+
+    errors.add(:birth_date, '未来の日付には出来ません')
+  end
 end
