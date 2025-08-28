@@ -10,6 +10,8 @@ RSpec.describe 'Users', type: :system do
     @user = FactoryBot.create(:user)
     # サインインページに移動する
     visit new_user_session_path
+    page.driver.browser.manage.window.move_to(200, 100)
+    page.driver.browser.manage.window.resize_to(1200, 800)
 
     # ログインしていない場合、サインインページに遷移していることを確認する
     expect(page).to have_current_path(new_user_session_path)
