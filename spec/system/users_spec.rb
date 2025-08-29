@@ -106,4 +106,8 @@ RSpec.describe 'Users', type: :system do
     # サインインページに戻ってきていることを確認する
     expect(page).to have_current_path(new_user_session_path)
   end
+  it 'ログアウトできるか確認する' do
+    @user = FactoryBot.create(:user)
+    login_as
+  end
 end
