@@ -108,6 +108,10 @@ RSpec.describe 'Users', type: :system do
   end
   it 'ログアウトできるか確認する' do
     @user = FactoryBot.create(:user)
-    login_as
+    sign_in(@user)
+    click_on 'ログアウト'
+    sleep 1
+    expect(page).to have_current_path(root_path)
+    expect(page).to have_link('ログイン')
   end
 end
