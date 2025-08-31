@@ -17,6 +17,42 @@ RSpec.describe User, type: :model do
         expect(@user.errors.full_messages).to include "#{attr.humanize} can't be blank"
       end
     end
+    %w[last_name first_name].each do |attr|
+      it "#{attr}に半角文字が入ると登録できない" do
+        @user.send("#{attr}=", @user.send(attr) + 'a')
+        @user.valid?
+        expect(@user.errors.full_messages).to include "#{attr.humanize} must be full-width characters"
+      end
+      it "#{attr}に空白が入ると登録できない" do
+        @user.send("#{attr}=", @user.send(attr) + '　')
+        @user.valid?
+        expect(@user.errors.full_messages).to include "#{attr.humanize} must be full-width characters"
+      end
+    end
+    %w[last_name_kana first_name_kana].each do |attr|
+      it "#{attr}に半角文字が入ると登録できない" do
+        @user.send("#{attr}=", @user.send(attr) + 'a')
+        @user.valid?
+        expect(@user.errors.full_messages).to include "#{attr.humanize} must be katakana only"
+      end
+      it "#{attr}に空白が入ると登録できない" do
+        @user.send("#{attr}=", @user.send(attr) + '　')
+        @user.valid?
+        expect(@user.errors.full_messages).to include "#{attr.humanize} must be katakana only"
+      end
+    end
+    it 'emailは@がなければ登録できない' do
+      @user.email.sub!(/@/, '')
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Email is invalid'
+    end
+    it '同一のemailがある場合登録できない' do
+      @user.save
+      user = FactoryBot.build(:user)
+      user.email = @user.email
+      user.valid?
+      expect(user.errors.full_messages).to include 'Email has already been taken'
+    end
     it 'passwordが５文字以下では登録できない' do
       @user.password = Faker::Internet.password(min_length: 5, max_length: 5)
       @user.password_confirmation = @user.password
@@ -28,6 +64,18 @@ RSpec.describe User, type: :model do
       @user.password_confirmation = @user.password
       @user.valid?
       expect(@user.errors.full_messages).to include 'Password is too long (maximum is 128 characters)'
+    end
+    it 'passwordが数字のみでは登録できない' do
+      @user.password = Faker::Number.number(digits: rand(6..18))
+      @user.password_confirmation = @user.password
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Password must include both letters and numbers'
+    end
+    it 'passwordが英字のみでは登録できない' do
+      @user.password = Faker::Alphanumeric.alpha(number: rand(6..18))
+      @user.password_confirmation = @user.password
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Password must include both letters and numbers'
     end
     it 'passwordとpassword_confirmationが同一でなければ登録できない' do
       @user.password = @user.password + 'a'
