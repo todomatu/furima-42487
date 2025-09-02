@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validate :birth_cannot_be_in_the_future
   validates :last_name, :first_name, format: { with: /\A[ぁ-んァ-ヶ一-龠々ー]+\z/, message: 'must be full-width characters' }
   validates :last_name_kana, :first_name_kana, format: { with: /\A[ァ-ヶヴー]+\z/, message: 'must be katakana only' }
-  validates :password, format: { with: /\A(?=.*?[a-z])(?=.*?\d)[a-z\d]+\z/i, message: 'must include both letters and numbers' }
+  validate :password_complexity
 
   private
 
@@ -15,5 +15,14 @@ class User < ApplicationRecord
     return unless birth_date.present? && birth_date > Date.today
 
     errors.add(:birth_date, 'cannot be a future date')
+  end
+
+  def password_complexity
+    return if password.blank?
+
+    errors.add(:password, 'cannot contain full-width characters') unless password =~ /\A[\x00-\x7F]+\z/
+    return if password =~ /\A(?=.*?[a-z])(?=.*?\d)[a-z\d]+\z/i
+
+    errors.add(:password, 'must include both letters and numbers')
   end
 end

@@ -42,7 +42,7 @@ RSpec.describe User, type: :model do
       end
     end
     it 'emailは@がなければ登録できない' do
-      @user.email.sub!(/@/, '')
+      @user.email = @user.email.sub(/@/, '')
       @user.valid?
       expect(@user.errors.full_messages).to include 'Email is invalid'
     end
@@ -66,7 +66,7 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages).to include 'Password is too long (maximum is 128 characters)'
     end
     it 'passwordが数字のみでは登録できない' do
-      @user.password = Faker::Number.number(digits: rand(6..18))
+      @user.password = Faker::Number.number(digits: rand(6..18)).to_s
       @user.password_confirmation = @user.password
       @user.valid?
       expect(@user.errors.full_messages).to include 'Password must include both letters and numbers'
@@ -89,7 +89,7 @@ RSpec.describe User, type: :model do
       end
       @user.password = password
       @user.valid?
-      expect(@user.errors.full_messages).to include 'Password must include both letters and numbers'
+      expect(@user.errors.full_messages).to include 'Password cannot contain full-width characters'
     end
     it 'passwordとpassword_confirmationが同一でなければ登録できない' do
       @user.password = @user.password + 'a'
