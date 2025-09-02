@@ -77,6 +77,20 @@ RSpec.describe User, type: :model do
       @user.valid?
       expect(@user.errors.full_messages).to include 'Password must include both letters and numbers'
     end
+    it 'passwordに全角文字を含む場合は登録できない' do
+      chars = (['ぁ'..'ん', 'ァ'..'ヶ', '一'..'龥'].map(&:to_a).flatten + %W[\u3005 \u30FC ヴ])
+      num = rand(1..5)
+      str = Array.new(num) { chars.sample }.join
+      password = @user.password
+      str.length.times do |time|
+        l = password.length
+        r = rand(l + 1)
+        password.insert(r, str[time])
+      end
+      @user.password = password
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Password must include both letters and numbers'
+    end
     it 'passwordとpassword_confirmationが同一でなければ登録できない' do
       @user.password = @user.password + 'a'
       @user.valid?

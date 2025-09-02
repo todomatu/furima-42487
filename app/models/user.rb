@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   validates :nickname, :last_name, :first_name, :last_name_kana, :first_name_kana, :birth_date, presence: true
   validate :birth_cannot_be_in_the_future
-  validates :last_name, :first_name, format: { with: /\A[^\x00-\x7F\s　]+\z/, message: 'must be full-width characters' }
+  validates :last_name, :first_name, format: { with: /\A[ぁ-んァ-ヶ一-龠々ー]+\z/, message: 'must be full-width characters' }
   validates :last_name_kana, :first_name_kana, format: { with: /\A[ァ-ヶヴー]+\z/, message: 'must be katakana only' }
   validates :password, format: { with: /\A(?=.*?[a-z])(?=.*?\d)[a-z\d]+\z/i, message: 'must include both letters and numbers' }
 
