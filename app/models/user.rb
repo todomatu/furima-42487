@@ -9,6 +9,8 @@ class User < ApplicationRecord
   validates :last_name_kana, :first_name_kana, format: { with: /\A[ァ-ヶヴー]+\z/, message: 'must be katakana only' }
   validate :password_complexity
 
+  has_many :items
+
   private
 
   def birth_cannot_be_in_the_future
