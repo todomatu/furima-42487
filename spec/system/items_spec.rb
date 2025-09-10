@@ -34,6 +34,8 @@ RSpec.describe 'Items', type: :system do
     it '商品出品に成功しルートページに戻る' do
       # ユーザーをログインする
       visit root_path
+      page.driver.browser.manage.window.move_to(200, 100)
+      page.driver.browser.manage.window.resize_to(1200, 800)
       # 出品ページに移動する
       click_link '出品する'
       sleep 1
