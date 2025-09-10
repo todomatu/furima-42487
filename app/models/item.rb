@@ -13,7 +13,7 @@ class Item < ApplicationRecord
   validates :item_price,
             numericality: { greater_than_or_equal_to: 300, less_than_or_equal_to: 9_999_999,
                             message: 'must be between 300 and 9,999,999' }
-  validates :item_name, :item_info, :item_price, presence: true
+  validates :item_name, :item_info, :item_price, :image, presence: true
   extend ActiveHash::Associations::ActiveRecordExtensions
   belongs_to :category
   belongs_to :item_sales_status
