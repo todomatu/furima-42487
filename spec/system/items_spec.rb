@@ -87,7 +87,6 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content("can't be blank")
       expect(page).to have_content('商品の情報を入力')
       expect(page).to have_content(@item.item_info)
-      binding.pry
     end
     it 'item_priceに小数点以下の数字がある場合はエラーメッセージが出る' do
       # 出品ページにアクセスする
