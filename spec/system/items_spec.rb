@@ -44,7 +44,13 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_current_path(new_item_path)
 
       # アイテム情報を入力する
+      i = @item.item_price
+      @item.item_price = ''
       set(@item)
+      page.execute_script('window.scrollTo(0, document.body.scrollHeight)')
+      sleep 1
+      fill_in 'item-price', with: i
+      sleep 1
 
       # ボタンを押す
       expect do
