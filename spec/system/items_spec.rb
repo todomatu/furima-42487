@@ -51,7 +51,6 @@ RSpec.describe 'Items', type: :system do
       sleep 1
       fill_in 'item-price', with: i
       sleep 1
-
       # ボタンを押す
       expect do
         find('[name="commit"]').click
@@ -88,6 +87,23 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content("can't be blank")
       expect(page).to have_content('商品の情報を入力')
       expect(page).to have_content(@item.item_info)
+      binding.pry
+    end
+    it 'item_priceに小数点以下の数字がある場合はエラーメッセージが出る' do
+      # 出品ページにアクセスする
+      visit new_item_path
+      # 出品ページに移動しているか確認する
+      expect(page).to have_current_path(new_item_path)
+
+      # アイテム情報を入力する
+      @item.item_price = ''
+      set(@item)
+      fill_in 'item-price', with: (@item.item_price.to_f + Faker::Number.decimal(l_digits: 0, r_digits: 2).to_f)
+      # 出品ボタンを押す
+      click_on '出品する'
+      sleep 1
+      # エラーメッセージが出ているか確認する
+      expect(page).to have_content('Item price must be an integer between 300 and 9,999,999')
     end
   end
 end

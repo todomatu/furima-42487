@@ -10,36 +10,85 @@ RSpec.describe User, type: :model do
     end
   end
   context '新規登録できない場合' do
-    %w[nickname email password first_name last_name first_name_kana last_name_kana birth_date].each do |attr|
-      it "#{attr}がからでは登録できない" do
-        @user.send("#{attr}=", '')
-        @user.valid?
-        expect(@user.errors.full_messages).to include "#{attr.humanize} can't be blank"
-      end
+    it 'nicknameがからでは登録できない' do
+      @user.nickname = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "Nickname can't be blank"
     end
-    %w[last_name first_name].each do |attr|
-      it "#{attr}に半角文字が入ると登録できない" do
-        @user.send("#{attr}=", @user.send(attr) + 'a')
-        @user.valid?
-        expect(@user.errors.full_messages).to include "#{attr.humanize} must be full-width characters"
-      end
-      it "#{attr}に空白が入ると登録できない" do
-        @user.send("#{attr}=", @user.send(attr) + '　')
-        @user.valid?
-        expect(@user.errors.full_messages).to include "#{attr.humanize} must be full-width characters"
-      end
+    it 'emailがからでは登録できない' do
+      @user.email = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "Email can't be blank"
     end
-    %w[last_name_kana first_name_kana].each do |attr|
-      it "#{attr}に半角文字が入ると登録できない" do
-        @user.send("#{attr}=", @user.send(attr) + 'a')
-        @user.valid?
-        expect(@user.errors.full_messages).to include "#{attr.humanize} must be katakana only"
-      end
-      it "#{attr}に空白が入ると登録できない" do
-        @user.send("#{attr}=", @user.send(attr) + '　')
-        @user.valid?
-        expect(@user.errors.full_messages).to include "#{attr.humanize} must be katakana only"
-      end
+    it 'passwordがからでは登録できない' do
+      @user.password = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "Password can't be blank"
+    end
+    it 'first_nameがからでは登録できない' do
+      @user.first_name = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "First name can't be blank"
+    end
+    it 'last_namがからでは登録できない' do
+      @user.last_name = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "Last name can't be blank"
+    end
+    it 'first_name_kanaがからでは登録できない' do
+      @user.first_name_kana = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "First name kana can't be blank"
+    end
+    it 'last_name_kanaがからでは登録できない' do
+      @user.last_name_kana = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "Last name kana can't be blank"
+    end
+    it 'birth_dateがからでは登録できない' do
+      @user.birth_date = ''
+      @user.valid?
+      expect(@user.errors.full_messages).to include "Birth date can't be blank"
+    end
+    it 'last_nameに半角文字が入ると登録できない' do
+      @user.last_name += 'a'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Last name must be full-width characters'
+    end
+    it 'first_nameに半角文字が入ると登録できない' do
+      @user.first_name += 'a'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'First name must be full-width characters'
+    end
+    it 'last_nameに空白が入ると登録できない' do
+      @user.last_name += '　'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Last name must be full-width characters'
+    end
+    it 'first_nameに空白が入ると登録できない' do
+      @user.first_name += '　'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'First name must be full-width characters'
+    end
+    it 'last_name_kanaに半角文字が入ると登録できない' do
+      @user.last_name_kana += 'a'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Last name kana must be katakana only'
+    end
+    it 'first_name_kanaに半角文字が入ると登録できない' do
+      @user.first_name_kana += 'a'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'First name kana must be katakana only'
+    end
+    it 'last_name_kanaに空白が入ると登録できない' do
+      @user.last_name_kana += '　'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'Last name kana must be katakana only'
+    end
+    it 'first_name_kanaに空白が入ると登録できない' do
+      @user.first_name_kana += '　'
+      @user.valid?
+      expect(@user.errors.full_messages).to include 'First name kana must be katakana only'
     end
     it 'emailは@がなければ登録できない' do
       @user.email = @user.email.sub(/@/, '')
