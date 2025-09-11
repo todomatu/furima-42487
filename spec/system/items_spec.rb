@@ -56,6 +56,34 @@ RSpec.describe 'Items', type: :system do
         find('[name="commit"]').click
         sleep 1
       end.to change { Item.count }.by(1)
+      # ルートパスに戻っているか確認する
+      expect(page).to have_current_path(root_path)
+    end
+    it 'エラーが出た後も再入力し直せば、出品できる' do
+      # 出品ページにアクセスする
+      visit new_item_path
+      # 出品ページに移動しているか確認する
+      expect(page).to have_current_path(new_item_path)
+      i = FactoryBot.build(:item)
+      # アイテム情報を入力する
+      @item.item_name = ''
+      set(@item)
+      # 出品ページが表示されているか確認する
+      expect do
+        find('[name="commit"]').click
+        sleep 1
+      end.to change { Item.count }.by(0)
+      expect(page).to have_content("can't be blank")
+      expect(page).to have_content('商品の情報を入力')
+      expect(page).to have_content(@item.item_info)
+      # 商品情報を再入力する
+      set(i)
+      expect do
+        find('[name="commit"]').click
+        sleep 1
+      end.to change { Item.count }.by(1)
+      # ルートパスに戻っているか確認する
+      expect(page).to have_current_path(root_path)
     end
   end
   context '出品に失敗する場合' do
