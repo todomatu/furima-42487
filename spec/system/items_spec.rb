@@ -136,5 +136,32 @@ RSpec.describe 'Items', type: :system do
     end
   end
   describe 'index機能', :index do
+    def scroll_item_img
+      element = first('img.item-img')
+      page.execute_script('arguments[0].scrollIntoView({block: "center"});', element)
+    end
+    it 'ダミー表示機能' do
+      # indexに入る
+      visit root_path
+      page.driver.browser.manage.window.move_to(200, 100)
+      page.driver.browser.manage.window.resize_to(1200, 800)
+
+      scroll_item_img
+      expect(page).to have_css("img[src='https://tech-master.s3.amazonaws.com/uploads/curriculums/images/Rails1-4/sample.jpg']")
+      expect(page).to have_content('商品を出品してね！')
+      expect(page).to have_content('(税込み)')
+    end
+    it 'メッセージ表示機能' do
+      items = []
+      10.times do
+        items << FactoryBot.create(:item, created_at: Faker::Time.backward(days: 10, period: :all))
+      end
+      items_name = items.sort_by(&:created_at).map(&:item_name).reverse
+      # indexに入る
+      visit root_path
+      scroll_item_img
+      items_on_page = all('li.list .item-name').map(&:text)
+      expect(items_on_page).to eq(items_name)
+    end
   end
 end
