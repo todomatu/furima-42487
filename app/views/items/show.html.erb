@@ -96,12 +96,16 @@
     </form>
   </div>
   <div class="links">
-    <a href="#" class="change-item-btn">
+    <% if @item.previous %>
+    <a href="<%= item_path(@item.previous) %>" class="change-item-btn">
       ＜ 前の商品
     </a>
-    <a href="#" class="change-item-btn">
+    <% end %>
+    <% if @item.next_item %>
+    <a href="<%= item_path(@item.next_item) %>" class="change-item-btn">
       後ろの商品 ＞
     </a>
+    <%end%>
   </div>
   <%# 詳細ページで表示されている商品のカテゴリー名を表示しましょう %>
   <a href="#" class="another-item"><%= "商品のカテゴリー名" %>をもっと見る</a>
