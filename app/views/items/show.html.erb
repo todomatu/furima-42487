@@ -16,7 +16,7 @@
     </div>
     <div class="item-price-box">
       <span class="item-price">
-        ¥ <%=@item.price%>
+        ¥ <%=@item.item_price%>
       </span>
       <span class="item-postage">
         <%= ItemShippingFeeStatus.find(@item.item_shipping_fee_status_id).name %>
@@ -48,7 +48,7 @@
         </tr>
         <tr>
           <th class="detail-item">カテゴリー</th>
-          <td class="detail-value"><%= Category.find(@item.category_id).name %></td>
+          <td class="detail-value"><%= Category.find(@item.item_category_id).name %></td>
         </tr>
         <tr>
           <th class="detail-item">商品の状態</th>
