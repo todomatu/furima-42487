@@ -40,7 +40,7 @@
     
 
     <div class="item-explain-box">
-      <span><%= "商品説明" %></span>
+      <span><%= @item.item_info %></span>
     </div>
     <table class="detail-table">
       <tbody>
@@ -111,9 +111,9 @@
     </a>
     <%end%>
   </div>
-  <%# 詳細ページで表示されている商品のカテゴリー名を表示しましょう %>
-  <a href="#" class="another-item"><%= "商品のカテゴリー名" %>をもっと見る</a>
-  <%# //詳細ページで表示されている商品のカテゴリー名を表示しましょう %>
+
+  <a href="#" class="another-item"><%= Category.find(@item.item_category_id).name %>をもっと見る</a>
+
 </div>
 
 <%= render "shared/footer" %>
