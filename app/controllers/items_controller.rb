@@ -14,11 +14,9 @@ class ItemsController < ApplicationController
   end
 
   def update
-    if @item.update(item_params)
-      redirect_to root_path
-    else
-      render :edit, status: :unprocessable_entity
-    end
+    return unless @item.update(item_params)
+
+    redirect_to root_path
   end
 
   def create
