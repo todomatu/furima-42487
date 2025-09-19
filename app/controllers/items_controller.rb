@@ -14,8 +14,6 @@ class ItemsController < ApplicationController
   end
 
   def update
-    return unless @item.update(item_params)
-
     redirect_to root_path
   end
 
