@@ -20,4 +20,16 @@ class Item < ApplicationRecord
   belongs_to :item_prefecture
   belongs_to :item_shipping_fee_status
   belongs_to :item_scheduled_delivery
+
+  def previous
+    Item.where('created_at < ?', created_at)
+        .order(created_at: :desc)
+        .first
+  end
+
+  def next_item
+    Item.where('created_at > ?', created_at)
+        .order(created_at: :asc)
+        .first
+  end
 end
