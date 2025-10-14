@@ -1,6 +1,10 @@
 class OrdersController < ApplicationController
+  before_action :move_to_root_if_not_signed_in, only: [:index, :create]
+  before_action :authorize_user!, only: [:index, :create]
+  before_action :move_to_root_if_soled_out, only: [:index, :create]
   def index
     gon.public_key = ENV['PAYJP_PUBLIC_KEY']
+    @item = Item.find(params[:item_id])
     @order_address = OrderAddress.new
   end
 
@@ -9,7 +13,7 @@ class OrdersController < ApplicationController
     if @order_address.valid?
       ActiveRecord::Base.transaction do
         @order_address.save!
-        pay_item(@order_address)
+        pay_item!(@order_address)
       end
       redirect_to root_path
     else
@@ -32,5 +36,17 @@ class OrdersController < ApplicationController
       card: order.token,
       currency: 'jpy'
     )
+  end
+
+  def move_to_root_if_not_signed_in
+    redirect_to root_path unless user_sign_in?
+  end
+
+  def authorize_user!
+    redirect_to root_path if current_user == @item.user
+  end
+
+  def move_to_root_if_soled_out
+    redirect_to root_path if Order.find_by(item_id: params[:item_id])
   end
 end

@@ -4,7 +4,8 @@ class OrderAddress
 
   with_options presence: true do
     validates :token
-    validates :item_id, :user_id
+    validates :user_id
+    validates :item_id, uniqueness: true
     validates :postal_code, format: { with: /\A[0-9]{3}-[0-9]{4}\z/, message: 'is invalid. Please include hyphen(-)' }
     validates :item_prefecture_id,
               numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 48,
@@ -13,7 +14,7 @@ class OrderAddress
     validates :address, format: { with: /[0-9０-９一二三四五六七八九〇壱弐参肆伍陸漆捌玖拾ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹ]/,
                                   message: 'must include number' }
     validates :phone_number,
-              format: { with: /\A[0-9０-９]{2,5}[-ー]?[0-9０-９]{1,4}[-ー]?[0-9０-９]{4}\z/,
+              format: { with: /\A\d{10,11}\z/,
                         message: 'Phone number must follow the format: area code + number + number.' }
   end
   def save
