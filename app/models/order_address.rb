@@ -21,12 +21,12 @@ class OrderAddress
               format: { with: /\A\d{10,11}\z/,
                         message: 'number must be entered without hyphens, 10 or 11 digits' }
   end
-  def save
+  def save!
     order = Order.new(item_id: item_id, user_id: user_id)
-    return unless order.save
+    return unless order.save!
 
-    Address.create(postal_code: postal_code, item_prefecture_id: item_prefecture_id, city: city, address: address, building: building,
-                   phone_number: phone_number, order_id: order.id)
+    Address.create!(postal_code: postal_code, item_prefecture_id: item_prefecture_id, city: city, address: address, building: building,
+                    phone_number: phone_number, order_id: order.id)
   end
 
   def item_is_not_order
