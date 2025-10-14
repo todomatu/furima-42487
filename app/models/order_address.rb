@@ -5,7 +5,8 @@ class OrderAddress
   with_options presence: true do
     validates :token
     validates :user_id
-    validates :item_id, uniqueness: true
+    validates :item_id
+    validate :item_is_not_order
     validates :postal_code, format: { with: /\A[0-9]{3}-[0-9]{4}\z/, message: 'is invalid. Please include hyphen(-)' }
     validates :item_prefecture_id,
               numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 48,
@@ -23,5 +24,11 @@ class OrderAddress
 
     Address.create(postal_code: postal_code, item_prefecture_id: item_prefecture_id, city: city, address: address, building: building,
                    phone_number: phone_number, order_id: order.id)
+  end
+
+  def item_is_not_order
+    return unless Order.exists?(item_id: item_id)
+
+    errors.add(item_id:, "has already been purchased") 
   end
 end
