@@ -1,10 +1,10 @@
 class OrdersController < ApplicationController
+  before_action :set_item, only: [:index, :create]
   before_action :move_to_root_if_not_signed_in, only: [:index, :create]
   before_action :authorize_user!, only: [:index, :create]
   before_action :move_to_root_if_soled_out, only: [:index, :create]
   def index
     gon.public_key = ENV['PAYJP_PUBLIC_KEY']
-    @item = Item.find(params[:item_id])
     @order_address = OrderAddress.new
   end
 
@@ -36,6 +36,10 @@ class OrdersController < ApplicationController
       card: order.token,
       currency: 'jpy'
     )
+  end
+
+  def set_item
+    @item = Item.find(params[:item_id])
   end
 
   def move_to_root_if_not_signed_in
