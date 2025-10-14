@@ -4,20 +4,22 @@ class OrderAddress
 
   validate :item_is_not_order
 
+  validates :item_prefecture_id,
+            numericality: { only_integer: true, greater_than_or_equal_to: 2, less_than_or_equal_to: 48,
+                            message: 'must be selected' }
+
   with_options presence: true do
     validates :token
     validates :user_id
     validates :item_id
     validates :postal_code, format: { with: /\A[0-9]{3}-[0-9]{4}\z/, message: 'is invalid. Please include hyphen(-)' }
-    validates :item_prefecture_id,
-              numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 48,
-                              message: 'must be selected' }
+
     validates :city
     validates :address, format: { with: /[0-9０-９一二三四五六七八九〇壱弐参肆伍陸漆捌玖拾ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹ]/,
                                   message: 'must include number' }
     validates :phone_number,
               format: { with: /\A\d{10,11}\z/,
-                        message: 'Phone number must follow the format: area code + number + number.' }
+                        message: 'number must be entered without hyphens, 10 or 11 digits' }
   end
   def save
     order = Order.new(item_id: item_id, user_id: user_id)

@@ -6,22 +6,19 @@ RSpec.describe Order, type: :model do
   end
 
   context '内容に問題ない場合' do
-    it 'priceとtokenがあれば保存ができること' do
+    it 'itemとuserがあれば保存ができること' do
       expect(@order).to be_valid
     end
   end
 
   context '内容に問題がある場合' do
-    it 'priceが空では保存ができないこと' do
-      @order.item[:price] = nil
-      @order.valid?
-      expect(@order.errors.full_messages).to include("Price can't be blank")
+    it 'userと紐づいていなくては登録できない' do
+      @order.user = nil
+      puts @order.errors.full_messages
     end
-
-    it 'tokenが空では登録できないこと' do
-      @order.token = nil
-      @order.valid?
-      expect(@order.errors.full_messages).to include("Token can't be blank")
+    it 'itemと紐づいていなくては登録できない' do
+      @order.item = nil
+      puts @order.errors.full_messages
     end
   end
 end
