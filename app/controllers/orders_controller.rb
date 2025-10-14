@@ -11,10 +11,10 @@ class OrdersController < ApplicationController
   def create
     @order_address = OrderAddress.new(order_params)
     if @order_address.valid?
-      ActiveRecord::Base.transaction do
-        @order_address.save!
-        pay_item!(@order_address)
-      end
+
+      @order_address.save
+      pay_item(@order_address)
+
       redirect_to root_path
     else
       render 'index', status: :unprocessable_entity
