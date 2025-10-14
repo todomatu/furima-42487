@@ -29,6 +29,6 @@ class OrderAddress
   def item_is_not_order
     return unless Order.exists?(item_id: item_id)
 
-    errors.add(item_id:, "has already been purchased") 
+    errors.add(:item_id, 'has already been purchased')
   end
 end
