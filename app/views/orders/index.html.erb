@@ -16,7 +16,7 @@
         </h2>
         <div class='buy-item-price'>
           <p class='item-price-text'>¥<%= @item.item_price %></p>
-          <p class='item-price-sub-text'><%= ItemShippingFeeStatus.find(@item.item_shipping_fee_status_id) %></p>
+          <p class='item-price-sub-text'><%= ItemShippingFeeStatus.find(@item.item_shipping_fee_status_id).name %></p>
         </div>
       </div>
     </div>
@@ -32,6 +32,7 @@
       </p>
     </div>
     <%# /支払額の表示 %>
+    <%= render 'shared/error_messages', model: f.object %>
     <%# カード情報の入力 %>
     <div class='credit-card-form'>
       <h1 class='info-input-haedline'>
