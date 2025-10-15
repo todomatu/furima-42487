@@ -10,6 +10,7 @@ class User < ApplicationRecord
   validate :password_complexity
 
   has_many :items
+  has_many :orders
 
   private
 
