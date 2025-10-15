@@ -1,8 +1,6 @@
 FactoryBot.define do
   Faker::Config.locale = 'ja'
   factory :order_address do
-    item_id { Faker::Number.number(digits: 12) }
-    user_id { Faker::Number.number(digits: 12) }
     postal_code { Faker::Address.postcode }
     item_prefecture_id { rand(2..48) }
     city { Faker::Address.city }

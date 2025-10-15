@@ -1,8 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe OrderAddress, type: :model do
+  before(:all) do
+    @item = FactoryBot.create(:item)
+    @user = FactoryBot.create(:user)
+  end
+  after(:all) do
+    Item.delete_all
+    User.delete_all
+  end
   before do
-    @order_address = FactoryBot.build(:order_address)
+    @order_address = FactoryBot.build(:order_address, item_id: @item.id, user_id: @user.id)
   end
   context '保存できる場合' do
     it ':item_id, :user_id, :postal_code, :item_prefecture_id, :city, :address, :building, :phone_number, :tokenがあれば登録できる' do
@@ -45,6 +53,11 @@ RSpec.describe OrderAddress, type: :model do
       @order_address.valid?
       expect(@order_address.errors.full_messages).to include('Postal code is invalid. Please include hyphen(-)')
     end
+    it 'postal_codeが全角数字の場合は保存できない' do
+      @order_address.postal_code = @order_address.postal_code.tr('0-9', '０-９')
+      @order_address.valid?
+      expect(@order_address.errors.full_messages).to include('Postal code is invalid. Please include hyphen(-)')
+    end
     it 'item_prefecture_idがからでは登録できない' do
       @order_address.item_prefecture_id = ''
       @order_address.valid?
@@ -77,6 +90,16 @@ RSpec.describe OrderAddress, type: :model do
     end
     it 'phone_numberにハイフンが入っている時登録できない' do
       @order_address.phone_number = "#{Faker::Number.number(digits: 3)}-#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+      @order_address.valid?
+      expect(@order_address.errors.full_messages).to include('Phone number number must be entered without hyphens, 10 or 11 digits')
+    end
+    it '電話番号が9桁だと登録できない' do
+      @order_address.phone_number = Faker::Number.number(digits: 9)
+      @order_address.valid?
+      expect(@order_address.errors.full_messages).to include('Phone number number must be entered without hyphens, 10 or 11 digits')
+    end
+    it '電話番号が12桁だと登録できない' do
+      @order_address.phone_number = Faker::Number.number(digits: 12)
       @order_address.valid?
       expect(@order_address.errors.full_messages).to include('Phone number number must be entered without hyphens, 10 or 11 digits')
     end
